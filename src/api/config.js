@@ -2,9 +2,9 @@ import axios from 'axios';
 
 let BaseURL;
 if (process.env === 'development') {
-	BaseURL = 'http://192.168.160.134:8000/api';
+	BaseURL = 'http://localhost:8000/api';
 }else{
-	BaseURL = 'http://192.168.160.134:8000/api';
+	BaseURL = 'http://localhost:8000/api';
 };
 
 

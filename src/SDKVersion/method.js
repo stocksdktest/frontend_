@@ -73,8 +73,8 @@ export default{
 
     console.log(params);
 
-    this.$http.delete('http://192.168.160.134:8000/api/sdkversion/'+params.id);
-    this.$http.post('http://192.168.160.134:8000/api/sdkversion/new', this.updata)
+    this.$http.delete('http://localhost:8000/api/sdkversion/'+params.id);
+    this.$http.post('http://localhost:8000/api/sdkversion/new', this.updata)
       .then((res) => {
       console.log(res);
       this.dialogEditClass = false;
@@ -104,7 +104,7 @@ export default{
       id: scope.row.id
     };
     console.log(scope);
-    this.$http.delete('http://192.168.160.134:8000/api/sdkversion/'+params.id).then((res) => {
+    this.$http.delete('http://localhost:8000/api/sdkversion/'+params.id).then((res) => {
       this.getTableData();
       this.$message({
         type: 'info',
@@ -177,7 +177,7 @@ export default{
   },
 
   postInfo(form){
-    this.$http.post('http://192.168.160.134:8000/api/sdkversion/new', this.form).then(function (response) {
+    this.$http.post('http://localhost:8000/api/sdkversion/new', this.form).then(function (response) {
       this.$message({
         type: 'info',
         message: '新建成功'
