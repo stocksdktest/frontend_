@@ -1,0 +1,31 @@
+export default{
+  init:function(){
+
+    return{
+      testValue1:'',
+      testValue2:'',
+      finishNum1:'',
+      errorNum1:'',
+      finishNum2:'',
+      errorNum2:'',
+      errorList1:[{
+        className:'',
+        caseName:'',
+        testTime:''
+      },{
+        className:'',
+        caseName:'',
+        testTime:''
+      }],
+      errorList2:[{
+        className:'',
+        caseName:'',
+        testTime:''
+      },{
+        className:'',
+        caseName:'',
+        testTime:''
+      }]
+    }
+  }
+}

@@ -1,0 +1,218 @@
+import {addStudent, getStudentList, removeStudentById} from '../api/student'
+import {addClasses, updateClasses} from "../api/class";
+export default{
+  //条件搜索
+  handleSearch() {
+    this.pagination.current = 1;
+    this.getTableData()
+  },
+  //重置搜索条件
+  resetForm(formName) {
+    this.$refs[formName].resetFields();
+  },
+  //设置分页大小
+  handlePageSizeChange(pageSize) {
+    this.pagination.pageSize = pageSize;
+    this.getTableData();
+  },
+  //设置页码
+  handleCurrentChange (current) {
+    this.pagination.current = current;
+    this.getTableData();
+  },
+  handleCloseAddDialog() {
+    this.classFrom =  Object.assign({}, this.defaultClassFrom);
+    this.$refs.addClassForm.resetFields();
+    this.$refs.createClass.close();
+  },
+  handleCloseEditDialog(){
+    this.editFrom =  Object.assign({}, this.defaultClassFrom);
+    this.$refs.editClassForm.resetFields();
+    this.$refs.editClass.close();
+  },
+  handleSave() {                                //---------------------提交新建表单
+    this.$refs.addClassForm.validate((valid) => {
+      if (valid) {
+        const params = Object.assign({}, this.classFrom);
+        addClasses(params).then((res) => {
+          this.$message({
+            type: 'info',
+            message: '新建成功'
+          });
+          this.$refs.createClass.close();
+          this.classFrom =  Object.assign({}, this.defaultClassFrom);
+          this.$refs.addClassForm.resetFields();
+          this.getTableData();
+        }).catch((err) => {
+          this.$message({
+            type: 'warning',
+            message: '新建失败'
+          });
+          console.log(err);
+        });
+      } else {
+        console.log('error submit!!');
+        return false;
+      }
+    });
+  },
+  editClass(scope){                         //---------------------编辑操作
+    this.dialogEditClass = true;
+    this.editFrom = Object.assign({}, {
+      className: scope.row.className,
+      gradge: scope.row.gradge,
+      masterName: scope.row.masterName,
+      message: scope.row.message,
+      id:scope.row.id
+    });
+  },
+  udpateClassesById(){
+    console.log(this.classData);
+    let params = Object.assign({}, this.editFrom);
+
+    console.log(params);
+
+    updateClasses(params).then((res) => {
+      console.log(res);
+      this.dialogEditClass = false;
+      this.getTableData();
+      this.$message.info('修改班级信息成功');
+    }).catch((err) => {
+      console.log(err);
+      this.$message.error('修改班级信息失败');
+    });
+  },
+  delStu(scope){                            //---------------------删除学生
+    this.$confirm('此操作将删除选中项, 是否继续?', '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    }).then(() => {
+      this.removeStudent(scope);
+    }).catch(() => {
+      this.$message({
+        type: 'warning',
+        message: '已取消删除'
+      });
+    });
+  },
+  removeStudent(scope){
+    const params = {
+      id: scope.row.id
+    };
+    console.log(scope);
+    removeStudentById(params).then((res) => {
+      this.getTableData();
+      this.$message({
+        type: 'info',
+        message: '删除成功'
+      });
+    }).catch((err) => {
+      console.log(err);
+    })
+  },
+
+  handleCloseAddStuDialog(){
+    this.stuFrom =  Object.assign({}, this.defaultstuFrom);
+    this.$refs.addStuForm.resetFields();
+    this.$refs.createStudent.close();
+  },
+  addStudent(scope){
+    this.dialogCreateStu = true;
+    this.stuFrom.classesId = scope.row.id;
+    console.log("------------------"+this.stuFrom.classesId);
+  },
+  handleSaveStu(){
+    this.$refs.addStuForm.validate((valid) => {
+      if (valid) {
+        const params = Object.assign({}, this.stuFrom);
+        addStudent(params).then((res) => {
+          this.$message({
+            type: 'info',
+            message: '新建成功'
+          });
+          this.$refs.createStudent.close();
+          this.stuFrom =  Object.assign({}, this.defaultstuFrom);
+          this.$refs.addStuForm.resetFields();
+        }).catch((err) => {
+          this.$message({
+            type: 'warning',
+            message: '新建失败'
+          });
+          console.log(err);
+        });
+      } else {
+        console.log('error submit!!');
+        return false;
+      }
+    });
+  },
+  removeDomain(item) {
+    var index = this.form.domains.indexOf(item)
+    if (index !== 0) {
+      this.form.domains.splice(index, 1)
+    }
+  },
+  addDomain() {
+    this.form.domains.push({
+      value: '',
+    });
+  },
+  removeDomain2(item) {
+    var index = this.form.domains2.indexOf(item)
+    if (index !== 0) {
+      this.form.domains2.splice(index, 1)
+    }
+  },
+  addDomain2() {
+    this.form.domains2.push({
+      value: '',
+    });
+  },
+
+
+    getTableData(){                           //---------------------获取列表数据
+    let para = {
+      pageNum: this.pagination.current,
+      pageSize: this.pagination.pageSize,
+      ...this.filter
+    };
+    console.log(para);
+    this.$http.get('http://192.168.160.134:8000/api/sdkinterface').then((res) => {
+      console.log(res);
+      this.studentData = res.data;
+      for(var x in res.data.domains){
+        this.studentData.android=this.student.android+x.value;
+
+      }
+      console.log("studentDta");
+      console.log(this.studentData.android);
+      //this.studentData.domains=res.data.domains.join(';');
+      //this.studentData.domains2=res.data.domains2.join(';');
+      console.log("studentDta");
+      console.log(this.studentData);
+      //this.pagination.total = res.data.total;
+    });
+  },
+
+  postInfo(form){
+    console.log("FORM");
+    //this.form.android=this.form.domains.join(';');
+    console.log(this.form);
+    this.$http.post('http://192.168.160.134:8000/api/sdkinterface/new', this.form).then(function (response) {
+      this.$message({
+        type: 'info',
+        message: '新建成功'
+      });
+      this.getTableData();
+    }, function (response) {
+      this.$message({
+        type: 'warning',
+        message: '新建失败'
+      });
+      console.log(err);
+    })
+  }
+}
+
+
