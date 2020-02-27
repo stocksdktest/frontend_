@@ -117,11 +117,10 @@ export default{
       pageSize: this.pagination.pageSize,
       ...this.filter
     };
-    console.log(para);
-    getStudentList(para).then((res) => {
-      console.log(res);
-      this.studentData = res.data.records;
-      this.pagination.total = res.data.total;
+    // console.log(para);
+    this.$http.get('http://192.168.135.17:8000/api/sdkmanage').then((res) => {
+      // console.log(res);
+      this.versionList = res.data;
     });
   },
   handleCloseAddStuDialog(){
@@ -181,6 +180,115 @@ export default{
       value: '',
     });
   },
+
+  deleteIterationVersion(scope){
+    this.$confirm('此操作将删除选中版本的关联信息（不会删除版本和接口）, 是否继续?', '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    }).then(() => {
+      this.removeIterationVersion(scope);
+    }).catch(() => {
+      this.$message({
+        type: 'warning',
+        message: '已取消删除'
+      });
+    });
+  },
+  removeIterationVersion(scope){
+
+    delete scope.row.data.interfaceList;
+    this.deleteform = Object.assign({}, {
+      sdk_version: scope.row.data.sdk_version,
+      sdk_iteration_version: scope.row.data.sdk_iteration_version,
+      platform:scope.row.data.platform,
+      id: scope.row.id
+    });
+    let params = Object.assign({}, this.deleteform);
+
+    // console.log(params);
+
+    this.$http.delete('http://192.168.135.17:8000/api/sdkmanage/'+params.id);
+    this.$http.post('http://192.168.135.17:8000/api/sdkmanage/new', this.deleteform)
+      .then((res) => {
+        // console.log(res);
+        // this.dialogEditClass = false;
+        this.getTableData();
+        this.$message.info('删除成功');
+      }).catch((err) => {
+      console.log(err);
+      this.$message.error('删除失败');
+    });
+  },
+  updateIterationVersion(scope){
+    this.updateform = Object.assign({}, {
+      sdk_version: scope.row.data.sdk_version,
+      sdk_iteration_version: scope.row.data.sdk_iteration_version,
+      platform:scope.row.data.platform,
+      interfaceList: scope.row.data.interfaceList,
+      id: scope.row.id
+    });
+
+
+    if(this.updateform.interfaceList){
+      this.updateform.interfaceList = scope.row.data.interfaceList
+
+    }else{
+      this.updateform.interfaceList = this.interfaceList
+    };
+    this.checkList = this.updateform.interfaceList
+  },
+  postInfo(updateform){
+    // console.log('checkList',this.checkList);
+    // for( var i = 0; i < this.updateform.interfaceList.length; i = i++){
+    //   // if(this.updateform.interfaceList[i].checkName){
+    //     this.updateform.interfaceList[i].checkName = this.checkList[i].checkName;
+    //     this.updateform.interfaceList[i].checkStatus = this.checkList[i].checkStatus;
+    //   // }
+    //
+    // };
+    this.updateform.interfaceList = this.checkList;
+    let params = Object.assign({}, this.updateform);
+
+    // console.log(params);
+
+    this.$http.delete('http://192.168.135.17:8000/api/sdkmanage/'+params.id);
+    this.$http.post('http://192.168.135.17:8000/api/sdkmanage/new', this.updateform)
+      .then((res) => {
+        // console.log(res);
+        // this.dialogEditClass = false;
+        this.getTableData();
+        this.$message.info('修改成功');
+      }).catch((err) => {
+      console.log(err);
+      this.$message.error('修改失败');
+    });
+  },
+  getTableDataFromSDKVersion(){
+    let para = {
+      pageNum: this.pagination.current,
+      pageSize: this.pagination.pageSize,
+      ...this.filter
+    };
+    console.log(para);
+    this.$http.get('http://192.168.135.17:8000/api/sdkversion').then((res) => {
+      console.log(res);
+      this.versionList = res.data;
+    });
+
+  },
+  getTableDataFromSDKInterface() {
+    let para = {
+      pageNum: this.pagination.current,
+      pageSize: this.pagination.pageSize,
+      ...this.filter
+    };
+    console.log(para);
+    this.$http.get('http://192.168.135.17:8000/api/sdkinterface').then((res) => {
+      console.log(res);
+      this.interfaceList = res.data;
+    });
+  }
 
 
 
