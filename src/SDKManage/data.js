@@ -5,25 +5,39 @@ export default{
 
     };
     return{
-      checkList: [ ],
-      studentData:[
+      interfaceList: [{interface_name:'接口名称1',checkStatus:false},{interface_name:'接口名称2',checkStatus:false}],
+      checkList:[],
+
+      versionList: [
         {
-          versionName:'2019.12',
-          iterationVersion:'v3.2.001',
+        // versionName:'',
+        //   iterationVersion:[{iterationVersionName:'v3.2.0.001'},{iterationVersionName:'v3.2.0.001'}],
+          sdk_version:'2019.12',
+          sdk_iteration_version:'v3.2.001',
           platform:'Android',
-          updataTime:'OHLCV2TestCase'
+          interfaceList: [{interface_name:'接口名称1',checkStatus:true},],
+        },
+        {
+          // versionName:'',
+          //   iterationVersion:[{iterationVersionName:'v3.2.0.001'},{iterationVersionName:'v3.2.0.001'}],
+          sdk_version:'2019.12',
+          sdk_iteration_version:'v3.2.001',
+          platform:'Android',
+          interfaceList:[{interface_name:'接口名称1',checkStatus:true},],
         }
       ],
-
-      filter: filter,													//查询条件
-      activeCollapse: 'search',										//开关查询折叠面板
-      pagination: {
-        total: 0,
-        current: 1,
-        pageSize: 10
+      updateform:{
+        sdk_version:'',
+        sdk_iteration_version:'',
+        platform:'',
+        interfaceList:[],
       },
-      editVisible: false,
-      dialogFormVisible: false,
+      deleteform:{
+        sdk_version:'',
+        sdk_iteration_version:'',
+        platform:'',
+        interfaceList:[],
+      },
       form: {
         versionName: '',
         iterationVersion: '',
@@ -39,6 +53,17 @@ export default{
           value: ''
         }]
       },
+
+      filter: filter,													//查询条件
+      activeCollapse: 'search',										//开关查询折叠面板
+      pagination: {
+        total: 0,
+        current: 1,
+        pageSize: 10
+      },
+      editVisible: false,
+      dialogFormVisible: false,
+
       dialogupdataVisible: false,
       updata: {
         versionName: '',
@@ -51,14 +76,11 @@ export default{
       },
       formLabelWidth: '120px',
       options1: [{
-        value1: '选项1',
-        label1: '201912'
+        value: '201922',
       }, {
-        value1: '选项2',
-        label1: '202001'
+        value: '202001',
       }, {
-        value1: '选项3',
-        label1: '07'
+        value: '07',
       },],
       options2: [{
         value2: '选项1',
