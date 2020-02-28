@@ -1,6 +1,160 @@
-import {addStudent, getStudentList, removeStudentById} from '../api/student'
-import {addClasses, updateClasses} from "../api/class";
+//import {addStudent, getStudentList, removeStudentById} from '../api/student'
+//import {addClasses, updateClasses} from "../api/class";
+
+import {addInfo, removeInfoById} from "../api/sdkversion";
+
 export default{
+
+    postInfo(form){                                //---------------------提交新建表单
+    //this.form.android=this.form.domains.join(';');
+    console.log(this.form);
+    this.$http.post('http://192.168.160.134:8000/api/sdkinterface/new', this.form).then(function (response) {
+      this.$message({
+        type: 'info',
+        message: '新建成功'
+      });
+      this.getTableData();
+    }, function (response) {
+      this.$message({
+        type: 'warning',
+        message: '新建失败'
+      });
+      console.log(err);
+    })
+  },
+
+  getTableData(){                           //---------------------获取列表数据
+    let para = {
+      pageNum: this.pagination.current,
+      pageSize: this.pagination.pageSize,
+      ...this.filter
+    };
+    console.log(para);
+    this.$http.get('http://192.168.160.134:8000/api/sdkinterface').then((res) => {
+      this.studentData = res.data;
+      for(var x in this.studentData){
+        this.studentData[x].data.android='';
+        this.studentData[x].data.ios='';
+        for(var y in this.studentData[x].data.domains) {
+          this.studentData[x].data.android = this.studentData[x].data.android + this.studentData[x].data.domains[y].value+';';
+        }
+        for(var z in this.studentData[x].data.domains2) {
+          this.studentData[x].data.ios = this.studentData[x].data.ios + this.studentData[x].data.domains2[z].value+';';
+        }
+      }
+    });
+  },
+
+  delInfo(scope){                            //---------------------删除一条列表数据
+    this.$confirm('此操作将删除选中项, 是否继续?', '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    }).then(() => {
+      this.removeInfo(scope);
+    }).catch(() => {
+      this.$message({
+        type: 'warning',
+        message: '已取消删除'
+      });
+    });
+  },
+
+  removeInfo(scope){
+    const params = {
+      id: scope.row.id
+    };
+    console.log(params.id);
+    this.$http.delete('http://192.168.160.134:8000/api/sdkinterface/'+params.id).then((res) => {
+      this.getTableData();
+      this.$message({
+        type: 'info',
+        message: '删除成功'
+      });
+    }).catch((err) => {
+      console.log(err);
+    })
+  },
+
+  editInfo(scope){                         //---------------------编辑操作
+    this.dialogEditClass = true;
+    this.updata = Object.assign({}, {
+      interface_name: scope.row.data.interface_name,
+      interface_describe: scope.row.data.interface_describe,
+      compare_method: scope.row.data.compare_method,
+      upload_version: scope.row.data.upload_version,
+      update_version: scope.row.data.update_version,
+      domains: scope.row.data.domains,
+      domains2: scope.row.data.domains2,
+      id:scope.row.id
+    });
+  },
+
+  updateInfoById(updata){                         //---------------------上传修改
+    console.log(this.updata);
+    let params = Object.assign({}, this.updata);
+    this.$http.delete('http://192.168.160.134:8000/api/sdkinterface/'+params.id)
+    this.$http.post('http://192.168.160.134:8000/api/sdkinterface/new', params)
+      .then((res) => {
+      console.log(res);
+      this.dialogEditClass = false;
+      this.getTableData();
+      this.$message.info('修改成功');
+    }).catch((err) => {
+      console.log(err);
+      this.$message.error('修改失败');
+    });
+  },
+
+
+  removeDomain(item) {
+    var index = this.form.domains.indexOf(item)
+    if (index !== 0) {
+      this.form.domains.splice(index, 1)
+    }
+  },
+  addDomain() {
+    this.form.domains.push({
+      value: '',
+    });
+  },
+  removeDomain2(item) {
+    var index = this.form.domains2.indexOf(item)
+    if (index !== 0) {
+      this.form.domains2.splice(index, 1)
+    }
+  },
+  addDomain2() {
+    this.form.domains2.push({
+      value: '',
+    });
+  },
+
+  removeDomain_updata(item) {
+    var index = this.updata.domains.indexOf(item)
+    if (index !== 0) {
+      this.updata.domains.splice(index, 1)
+    }
+  },
+  addDomain_updata() {
+    this.updata.domains.push({
+      value: '',
+    });
+  },
+  removeDomain2_updata(item) {
+    var index = this.updata.domains2.indexOf(item)
+    if (index !== 0) {
+      this.updata.domains2.splice(index, 1)
+    }
+  },
+  addDomain2_updata() {
+    this.updata.domains2.push({
+      value: '',
+    });
+  },
+
+//---------------------------------------------------------------------------------
+
   //条件搜索
   handleSearch() {
     this.pagination.current = 1;
@@ -147,72 +301,7 @@ export default{
       }
     });
   },
-  removeDomain(item) {
-    var index = this.form.domains.indexOf(item)
-    if (index !== 0) {
-      this.form.domains.splice(index, 1)
-    }
-  },
-  addDomain() {
-    this.form.domains.push({
-      value: '',
-    });
-  },
-  removeDomain2(item) {
-    var index = this.form.domains2.indexOf(item)
-    if (index !== 0) {
-      this.form.domains2.splice(index, 1)
-    }
-  },
-  addDomain2() {
-    this.form.domains2.push({
-      value: '',
-    });
-  },
 
-
-    getTableData(){                           //---------------------获取列表数据
-    let para = {
-      pageNum: this.pagination.current,
-      pageSize: this.pagination.pageSize,
-      ...this.filter
-    };
-    console.log(para);
-    this.$http.get('http://192.168.160.134:8000/api/sdkinterface').then((res) => {
-      console.log(res);
-      this.studentData = res.data;
-      for(var x in res.data.domains){
-        this.studentData.android=this.student.android+x.value;
-
-      }
-      console.log("studentDta");
-      console.log(this.studentData.android);
-      //this.studentData.domains=res.data.domains.join(';');
-      //this.studentData.domains2=res.data.domains2.join(';');
-      console.log("studentDta");
-      console.log(this.studentData);
-      //this.pagination.total = res.data.total;
-    });
-  },
-
-  postInfo(form){
-    console.log("FORM");
-    //this.form.android=this.form.domains.join(';');
-    console.log(this.form);
-    this.$http.post('http://192.168.160.134:8000/api/sdkinterface/new', this.form).then(function (response) {
-      this.$message({
-        type: 'info',
-        message: '新建成功'
-      });
-      this.getTableData();
-    }, function (response) {
-      this.$message({
-        type: 'warning',
-        message: '新建失败'
-      });
-      console.log(err);
-    })
-  }
 }
 
 

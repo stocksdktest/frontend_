@@ -30,11 +30,11 @@
           <el-table-column label='接口名称' prop='data.interface_name' width='150'></el-table-column>
           <el-table-column label='接口描述' prop='data.interface_describe' width='150'></el-table-column>
           <el-table-column label='android方法' prop='data.android' width='150'></el-table-column>
-          <el-table-column label='IOS方法' prop='data.domains2' width='150'></el-table-column>
+          <el-table-column label='IOS方法' prop='data.ios' width='150'></el-table-column>
           <el-table-column label='操作' prop='operate'>
             <template scope="scope">
-              <el-button @click="delStu(scope)" type="primary" size="primary">删除</el-button>
-              <el-button type="primary" @click="dialogupdataVisible = true">修改</el-button>
+              <el-button @click="delInfo(scope)" type="primary" size="primary">删除</el-button>
+              <el-button type="primary" @click="editInfo(scope),dialogupdataVisible = true">修改</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -93,43 +93,43 @@
     <el-dialog title="修改" :visible.sync="dialogupdataVisible">
       <el-form :model="updata">
         <el-form-item label="接口名称" :label-width="formLabelWidth">
-          <el-input v-model="form.versionName" auto-complete="off"></el-input>
+          <el-input v-model="updata.interface_name" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item  v-for="(domain, index) in form.domains"
+        <el-form-item  v-for="(domain, index) in updata.domains"
                        :label="'Android方法' + index"
                        :key="domain.key"
                        :label-width="formLabelWidth"  >
-          <el-input v-model="form.value" style="width: 200px;"></el-input>
-          <el-button @click="addDomain">添加</el-button>
-          <el-button @click.prevent="removeDomain(domain)">删除</el-button>
+          <el-input v-model="domain.value" style="width: 200px;"></el-input>
+          <el-button @click="addDomain_updata">添加</el-button>
+          <el-button @click.prevent="removeDomain_updata(domain)">删除</el-button>
         </el-form-item>
-        <el-form-item  v-for="(domain2, index) in form.domains2"
+        <el-form-item  v-for="(domain2, index) in updata.domains2"
                        :label="'IOS方法' + index"
                        :key="domain2.key"
                        :label-width="formLabelWidth"  >
-          <el-input v-model="form.value" style="width: 200px;"></el-input>
-          <el-button @click="addDomain2">添加</el-button>
-          <el-button @click.prevent="removeDomain2(domain2)">删除</el-button>
+          <el-input v-model="domain2.value" style="width: 200px;"></el-input>
+          <el-button @click="addDomain2_updata">添加</el-button>
+          <el-button @click.prevent="removeDomain2_updata(domain2)">删除</el-button>
         </el-form-item>
         <el-form-item label="接口描述" :label-width="formLabelWidth">
           <el-input
             type="textarea"
             autosize
             placeholder="请输入内容"
-            v-model="form.iterationVersion">
+            v-model="updata.interface_describe">
           </el-input>
         </el-form-item>
         <el-form-item style="margin-left: 10px">
           <label>此接口新增于</label>
-          <el-input v-model="updata.versionName" style="width: 120px" auto-complete="off"></el-input>
+          <el-input v-model="updata.upload_version" style="width: 120px" auto-complete="off"></el-input>
           <label>SDK版本，此接口最新更新于</label>
-          <el-input v-model="updata.versionName" style="width: 120px" auto-complete="off"></el-input>
+          <el-input v-model="updata.update_version" style="width: 120px" auto-complete="off"></el-input>
           <label>SDK版本</label>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogupdataVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogupdataVisible = false">确 定</el-button>
+        <el-button type="primary" @click="updateInfoById(updata),dialogupdataVisible = false">确 定</el-button>
       </div>
     </el-dialog>
   </div>
