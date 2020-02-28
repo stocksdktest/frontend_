@@ -11,6 +11,7 @@ export default{
           domains:'OHLCV3_1',
           domains2:'OHLCV2TestCase',
           android:'',
+          ios:'',
         }
       ],
       filter: filter,													//查询条件
@@ -30,26 +31,28 @@ export default{
         update_version:'',
         platform: '',
         delivery: false,
-        type: [],
-        resource: '',
-        desc: '',
         domains: [{
           value: ''
         }],
         domains2: [{
           value: ''
         }],
-        android:'',
       },
       dialogupdataVisible: false,
       updata: {
-        versionName: '',
-        iterationVersion: '',
+        interface_name: '',
+        interface_describe: '',
+        compare_method:'',
+        upload_version:'',
+        update_version:'',
         platform: '',
         delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
+        domains: [{
+          value: ''
+        }],
+        domains2: [{
+          value: ''
+        }],
       },
       formLabelWidth: '120px',
       options: [{
