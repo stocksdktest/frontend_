@@ -33,8 +33,8 @@
           <el-table-column label='上传时间' prop='data.upload_time' width='150'></el-table-column>
           <el-table-column label='操作' prop='operate'>
             <template scope="scope">
-              <el-button @click="delStu(scope)" type="primary" size="primary">删除</el-button>
-              <el-button type="primary" @click="editClass(scope),dialogupdataVisible = true">修改</el-button>
+              <el-button @click="delInfo(scope)" type="primary" size="primary">删除</el-button>
+              <el-button type="primary" @click="editInfo(scope),dialogupdataVisible = true">修改</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -121,7 +121,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogupdataVisible = false">取 消</el-button>
-        <el-button type="primary" @click="updateClassesById(updata),dialogupdataVisible = false">确 定</el-button>
+        <el-button type="primary" @click="updateInfoById(updata),dialogupdataVisible = false">确 定</el-button>
       </div>
     </el-dialog>
   </div>
