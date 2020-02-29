@@ -1,26 +1,22 @@
-﻿//import {addStudent, getStudentList, removeStudentById} from '../api/student'
-//import {addClasses, updateClasses} from "../api/class";
-
-import {addInfo, removeInfoById} from "../api/sdkversion";
+import {addInfo, getList, removeInfoById} from '../api/sdkinterface'
 
 export default{
 
     postInfo(form){                                //---------------------提交新建表单
-    //this.form.android=this.form.domains.join(';');
-    console.log(this.form);
-    this.$http.post('http://localhost:8000/api/sdkinterface/new', this.form).then(function (response) {
+    const params = Object.assign({}, this.form)
+    addInfo(params).then((res) => {
       this.$message({
         type: 'info',
         message: '新建成功'
       });
       this.getTableData();
-    }, function (response) {
+    }).catch((err) => {
       this.$message({
         type: 'warning',
         message: '新建失败'
       });
       console.log(err);
-    })
+    });
   },
 
   getTableData(){                           //---------------------获取列表数据
@@ -30,7 +26,7 @@ export default{
       ...this.filter
     };
     console.log(para);
-    this.$http.get('http://localhost:8000/api/sdkinterface').then((res) => {
+    getList().then((res) => {
       this.studentData = res.data;
       for(var x in this.studentData){
         this.studentData[x].data.android='';
@@ -64,8 +60,8 @@ export default{
     const params = {
       id: scope.row.id
     };
-    console.log(params.id);
-    this.$http.delete('http://localhost:8000/api/sdkinterface/'+params.id).then((res) => {
+    console.log(scope);
+    removeInfoById(params).then((res) => {
       this.getTableData();
       this.$message({
         type: 'info',
@@ -93,8 +89,9 @@ export default{
   updateInfoById(updata){                         //---------------------上传修改
     console.log(this.updata);
     let params = Object.assign({}, this.updata);
-    this.$http.delete('http://localhost:8000/api/sdkinterface/'+params.id)
-    this.$http.post('http://localhost:8000/api/sdkinterface/new', params)
+
+    addInfo(params);
+    removeInfoById(params)
       .then((res) => {
       console.log(res);
       this.dialogEditClass = false;

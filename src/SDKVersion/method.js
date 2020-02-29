@@ -81,8 +81,8 @@ export default{
 
     console.log(params);
 
-    removeInfoById(params);
-    addInfo(params)
+    addInfo(params);
+    removeInfoById(params)
       .then((res) => {
       console.log(res);
       this.dialogEditClass = false;
