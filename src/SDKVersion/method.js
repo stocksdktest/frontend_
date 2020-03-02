@@ -1,4 +1,4 @@
-import {addInfo, getList, removeInfoById} from '../api/sdkversion'
+import {addInfo, getList, getList_search, removeInfoById} from '../api/sdkversion'
 
 export default{
 
@@ -23,7 +23,7 @@ export default{
     let para = {
       pageNum: this.pagination.current,
       pageSize: this.pagination.pageSize,
-      ...this.filter
+      //...this.filter
     };
     console.log(para);
     getList().then((res) => {
@@ -94,17 +94,36 @@ export default{
     });
   },
 
-//---------------------------------------------------------------------------------
-
   //条件搜索
-  handleSearch() {
+  handleSearch(f) {
     this.pagination.current = 1;
-    this.getTableData()
+    this.getTableData_filter();
+  },
+
+  getTableData_filter(){                           //---------------------查询获取列表数据
+    let para = {
+      pageNum: this.pagination.current,
+      pageSize: this.pagination.pageSize,
+      //...this.filter
+    };
+    console.log(para);
+
+    let item = Object.assign({}, {key:"data.sdk_version_number",value:this.filter.versionName});
+    var params=[];
+    params.push(item);
+    getList_search(params).then((res) => {
+      console.log(res);
+      //this.pagination.total = res.data.total;
+      this.studentData = res.data;
+    });
   },
   //重置搜索条件
   resetForm(formName) {
     this.$refs[formName].resetFields();
   },
+
+  //---------------------------------------------------------------------------------
+
   //设置分页大小
   handlePageSizeChange(pageSize) {
     this.pagination.pageSize = pageSize;
