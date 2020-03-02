@@ -11,7 +11,7 @@
             </el-form-item>
           </el-col>
           <el-col :span='6' style="marginLeft:20px;">
-            <el-button @click='handleSearch' type='primary'>查询</el-button>
+            <el-button @click='handleSearch(filter.versionName)' type='primary'>查询</el-button>
             <el-button @click='resetForm("searchCondition")'>重置</el-button>
           </el-col>
           <el-col :span='2' style='margin: 0px 0 10px 0;' type='flex' justify='end'>
