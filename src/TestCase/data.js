@@ -1,17 +1,17 @@
 export default{
   init:function(){
     let filter = {
-      versionName: '',
-      iterationVersion:''
+      caseName: '',
+      wayName:''
     };
     return{
-      studentData:[
+      // caseList:[{caseName:'自定义规范',parameter:'600000.sh,dayk',codeType:'',code:''}],
+      caseData:[
         {
-          versionName:'自定义规范',
-          iterationVersion:'历史k线',
-          platform:'历史k线方法1',
-          updataTime:'android',
-          up:'600000.sh,dayk'
+          interfaceName:'',
+          className:'',
+          platform:'',
+          caseList:[{caseName:'自定义规范',parameter:'600000.sh,dayk',codeType:'',code:''}],
         }
       ],
       filter: filter,													//查询条件
@@ -24,23 +24,46 @@ export default{
       editVisible: false,
       dialogFormVisible: false,
       form: {
-        versionName: '',
-        iterationVersion: '',
-        platform: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
+        caseName:'',
+        codeType:'',
+        code:'',
+        parameter:[],
+        // delivery: false,
+        // type: [],
+        // resource: '',
+        // desc: ''
       },
+      dialogChangeCaseVisible:false,
+      codeTypeList:[{
+        stock_type:'SH1001',
+        stock_id:'600000.sh'
+      },{
+        stock_type:'SZ1001',
+        stock_id:'000001.sz'
+      }],
+      codeList:[{
+        stock_type:'SH1001',
+        stock_id:'600000.sh'
+      },{
+        stock_type:'SZ1001',
+        stock_id:'000001.sz'
+      }],
       dialogupdataVisible: false,
       updata: {
-        versionName: '',
-        iterationVersion: '',
-        platform: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
+        interfaceName:'',
+        className:'',
+        platform:'',
+        caseList:[],
+        // delivery: false,
+        // type: [],
+        // resource: '',
+        // desc: ''
+      },
+      updateform:{
+        interfaceName:'',
+        className:'',
+        platform:'',
+        caseList:[],
       },
       formLabelWidth: '120px'
     }
