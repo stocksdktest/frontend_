@@ -1,6 +1,63 @@
-import {addStudent, getStudentList, removeStudentById} from '../api/student'
-import {addClasses, updateClasses} from "../api/class";
+// import {addStudent, getStudentList, removeStudentById} from '../api/student'
+// import {addClasses, updateClasses} from "../api/class";
+import {getList,addInfo,removeInfoById} from "../api/testcase";
 export default{
+  postInfo(form){
+    console.log('form',form);
+    console.log('this.form',this.form);
+    this.updata.caseList.push(form)
+    console.log('this.updata',this.updata);
+  },
+  getTableData(){                           //---------------------获取列表数据
+    let para = {
+      pageNum: this.pagination.current,
+      pageSize: this.pagination.pageSize,
+      ...this.filter
+    };
+    console.log(para);
+    getList().then((res) => {
+      console.log(res);
+      // this.studentData = res.data.records;
+      // this.pagination.total = res.data.total;
+      this.caseData=res.data;
+      // this.caseData = [
+      //   {
+      //     interfaceName:'',
+      //     className:'',
+      //     platform:'',
+      //     caseList:[{caseName:'自定义规范',parameter:'600000.sh,dayk',codeType:'',code:''}],
+      //   }
+      // ];
+    });
+  },
+  editInfo(scope){                         //---------------------编辑操作
+    this.dialogEditClass = true;
+    this.updataform = Object.assign({}, {
+      interfaceName: scope.row.data.interfaceName,
+      className: scope.row.data.className,
+      platform: scope.row.data.platform,
+      id:scope.row.id
+    });
+  },
+
+  updateInfoById(updata){                         //---------------------上传修改
+    console.log(this.updata);
+    let params = Object.assign({}, this.updata);
+
+    console.log(params);
+
+    addInfo(params);
+    removeInfoById(params)
+      .then((res) => {
+        console.log(res);
+        this.dialogEditClass = false;
+        this.getTableData();
+        this.$message.info('修改成功');
+      }).catch((err) => {
+      console.log(err);
+      this.$message.error('修改失败');
+    });
+  },
   //条件搜索
   handleSearch() {
     this.pagination.current = 1;
@@ -82,13 +139,13 @@ export default{
       this.$message.error('修改班级信息失败');
     });
   },
-  delStu(scope){                            //---------------------删除学生
+  delInfo(scope){                            //---------------------删除一条列表数据
     this.$confirm('此操作将删除选中项, 是否继续?', '提示', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
       type: 'warning'
     }).then(() => {
-      this.removeStudent(scope);
+      this.removeInfo(scope);
     }).catch(() => {
       this.$message({
         type: 'warning',
@@ -96,12 +153,13 @@ export default{
       });
     });
   },
-  removeStudent(scope){
+
+  removeInfo(scope){
     const params = {
       id: scope.row.id
     };
     console.log(scope);
-    removeStudentById(params).then((res) => {
+    removeInfoById(params).then((res) => {
       this.getTableData();
       this.$message({
         type: 'info',
@@ -111,26 +169,67 @@ export default{
       console.log(err);
     })
   },
-  getTableData(){                           //---------------------获取列表数据
-    let para = {
-      pageNum: this.pagination.current,
-      pageSize: this.pagination.pageSize,
-      ...this.filter
-    };
-    console.log(para);
-    getStudentList(para).then((res) => {
-      console.log(res);
-      this.studentData = res.data.records;
-      this.pagination.total = res.data.total;
-    });
-  },
+
   handleCloseAddStuDialog(){
     this.stuFrom =  Object.assign({}, this.defaultstuFrom);
     this.$refs.addStuForm.resetFields();
     this.$refs.createStudent.close();
   },
-  addStudent(scope){
-    this.dialogCreateStu = true;
+  addCase(){                         //---------------------编辑操作
+    //this.dialogFormClass = true;
+    this.form = Object.assign({}, {
+      interfaceName:'',
+      className:'',
+      platform:'',
+      caseList:[]
+    });
+  },
+  saveInfo(updata){
+    // const params = Object.assign({}, this.updata)
+    // addInfo(params).then((res) => {
+    //   this.$message({
+    //     type: 'info',
+    //     message: '新建成功'
+    //   });
+    //   this.getTableData();
+    // }).catch((err) => {
+    //   this.$message({
+    //     type: 'warning',
+    //     message: '新建失败'
+    //   });
+    //   console.log(err);
+    // });
+    console.log(this.updata);
+    let params = Object.assign({}, this.updata);
+
+    console.log(params);
+
+    addInfo(params);
+    removeInfoById(params)
+      .then((res) => {
+        console.log(res);
+        this.dialogEditClass = false;
+        this.getTableData();
+        this.$message.info('修改成功');
+      }).catch((err) => {
+      console.log(err);
+      console.log(this.caseData)
+      this.$message.error('修改失败');
+    });
+  },
+  changecaselist(scope){
+    console.log(scope.row);
+    this.updata = Object.assign({}, {
+      interfaceName: scope.row.data.interfaceName,
+      className: scope.row.data.className,
+      platform:scope.row.data.platform,
+      caseList: scope.row.data.caseList,
+      id: scope.row.id
+    });
+    console.log(this.updata);
+  },
+  addClass(scope){
+    this.dialogFormVisible = true;
     this.stuFrom.classesId = scope.row.id;
     console.log("------------------"+this.stuFrom.classesId);
   },
@@ -138,7 +237,7 @@ export default{
     this.$refs.addStuForm.validate((valid) => {
       if (valid) {
         const params = Object.assign({}, this.stuFrom);
-        addStudent(params).then((res) => {
+        addInfo(params).then((res) => {
           this.$message({
             type: 'info',
             message: '新建成功'
